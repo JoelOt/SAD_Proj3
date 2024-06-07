@@ -26,13 +26,11 @@ public class ChatGUI {
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
 
-        // Message area
         messageArea = new JTextArea();
         messageArea.setEditable(false);
         JScrollPane messageScrollPane = new JScrollPane(messageArea);
         frame.add(messageScrollPane, BorderLayout.CENTER);
 
-        // Input field
         inputField = new JTextField();
         inputField.addActionListener(new ActionListener() {
             @Override
@@ -42,7 +40,6 @@ public class ChatGUI {
         });
         frame.add(inputField, BorderLayout.SOUTH);
 
-        // User list
         userListModel = new DefaultListModel<>();
         userList = new JList<>(userListModel);
         JScrollPane userScrollPane = new JScrollPane(userList);
@@ -51,7 +48,6 @@ public class ChatGUI {
 
         frame.setVisible(true);
 
-        // Ask for the nickname
         clientName = JOptionPane.showInputDialog(frame, "Enter your nickname:");
         if (clientName != null && !clientName.trim().isEmpty()) {
             socket.output.println(clientName);
@@ -94,7 +90,6 @@ public class ChatGUI {
                     String response = socket.readLine();
                     if (response != null) {
                         addMessage(response);
-                        // Logic to update the user list could be added here
                     }
                 }
             } catch (Exception e) {
