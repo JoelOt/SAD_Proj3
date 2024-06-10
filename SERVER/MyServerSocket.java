@@ -16,7 +16,7 @@ public class MyServerSocket extends ServerSocket {
         try {
             Socket socket = super.accept();
             MySocket mySocket = new MySocket(socket);
-            System.out.println("Accepted: " + socket.getInetAddress().getHostName() + " " + socket.getLocalPort());
+            System.out.println("Acceptat: " + socket.getInetAddress().getHostName() + " " + socket.getLocalPort());
             return mySocket;
         } catch (Exception e) {
             System.out.println("Error accepting: " + e.getStackTrace());

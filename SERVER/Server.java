@@ -13,8 +13,8 @@ public class Server {
         try (MyServerSocket myserversocket = new MyServerSocket(Integer.parseInt(args[0]))) {
 
             while (true) {
-                MySocket socket = myserversocket.accept();
-                serverThread serverThread = new Server().new serverThread(socket, clientList);
+                MySocket mysocket = myserversocket.accept();
+                serverThread serverThread = new Server().new serverThread(mysocket, clientList);
                 serverThread.start();
             }
         } catch (Exception e) {
@@ -26,45 +26,40 @@ public class Server {
         private MySocket mysocket;
         private ConcurrentHashMap<String, MySocket> clientList;
 
-        public serverThread(MySocket socket, ConcurrentHashMap<String, MySocket> clientList) {
-            this.mysocket = socket;
+        public serverThread(MySocket mysocket, ConcurrentHashMap<String, MySocket> clientList) {
+            this.mysocket = mysocket;
             this.clientList = clientList;
         }
 
         @Override
         public void run() {
-            try {
-                BufferedReader input = mysocket.getInput();
-                PrintWriter output = mysocket.getOutput();
-                String clientName = input.readLine();
-                System.out.println("Nickname received: " + clientName);
+            try {;;
+                String clientName = mysocket.rebreMsg();
+                System.out.println("Client rebut: " + clientName);
                 clientList.put(clientName, mysocket);
+                broadcast("Server: Benvingut " + clientName);
 
-                // Broadcast new user joined
-                broadcast("Server: " + clientName + " has joined the chat.");
-
-                // Infinite loop for server
                 while (true) {
-                    String outputString = input.readLine();
+                    String outputString = mysocket.rebreMsg();
                     if (outputString == null) {
                         break;
                     }
-                    System.out.println("Received from " + clientName + ": " + outputString);
+                    System.out.println("Rebut de " + clientName + ": " + outputString);
                     broadcast(outputString);
                 }
 
-                // Remove user and broadcast they left
                 clientList.remove(clientName);
-                broadcast("Server: " + clientName + " has left the chat.");
+                broadcast("Server: " + clientName + " ha abandonat la conversa.");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        private void broadcast(String outputString) {
-            clientList.forEach((name, value) -> {
-                value.getOutput().println(outputString);
+        private void broadcast(String msg) {
+            clientList.forEach((nick, socket) -> {
+                System.out.println("Enviat a " + nick + ": " + msg);
+                socket.getOutput().println(msg);
             });
         }
     }

@@ -87,7 +87,7 @@ public class ChatGUI {
         public void run() {
             try {
                 while (true) {
-                    String response = socket.readLine();
+                    String response = socket.rebreMsg();
                     if (response != null) {
                         addMessage(response);
                     }

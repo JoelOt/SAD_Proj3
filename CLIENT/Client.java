@@ -5,27 +5,27 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        try (MySocket socket = new MySocket(args[0], Integer.parseInt(args[1]))) {
+        try (MySocket mysocket = new MySocket(args[0], Integer.parseInt(args[1]))) {
 
-            ChatGUI chatGUI = new ChatGUI(socket);
+            ChatGUI chatGUI = new ChatGUI(mysocket);
             Scanner scanner = new Scanner(System.in);
             String userInput;
-            Client.clientThread clientThread = new Client().new clientThread(socket);
+            Client.clientThread clientThread = new Client().new clientThread(mysocket);
             clientThread.start();
             System.out.println("Nickname: ");
             userInput = scanner.nextLine();
             String clientName = userInput;
-            socket.output.println(userInput);
+            mysocket.enviarMSg(userInput);
 
             do {
                 userInput = scanner.nextLine();
-                socket.output.println(clientName + ":   message : " + userInput);
+                mysocket.enviarMSg(clientName + ":   msg : " + userInput);
                 if (userInput.equals("exit")) {
                     break;
                 }
             } while (!userInput.equals("exit"));
         } catch (Exception e) {
-            System.out.println("Exception occured in client main: " + e.getStackTrace());
+            System.out.println("Exception a main: " + e.getStackTrace());
         }
     }
 
@@ -39,7 +39,7 @@ public class Client {
         @Override
         public void run() {
             while (true) {
-                String response = socket.readLine();
+                String response = socket.rebreMsg();
                 System.out.println(response);
             }
         }

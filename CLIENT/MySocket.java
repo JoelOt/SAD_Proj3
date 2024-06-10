@@ -26,13 +26,21 @@ public class MySocket extends Socket {
         }
     }
 
-    public String readLine() {
+    public String rebreMsg(){
         try {
             return this.input.readLine();
         } catch (Exception e) {
             System.out.println("Error reading line: " + e.getStackTrace());
         }
         return null;
+    }
+
+    public void enviarMSg(String msg){
+        try {
+            this.output.println(msg);
+        } catch (Exception e) {
+            System.out.println("Error reading line: " + e.getStackTrace());
+        }
     }
 
     public BufferedReader getInput() {
